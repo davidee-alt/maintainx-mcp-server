@@ -4,6 +4,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
 import { handleToolError } from './utils/error-handler.js';
+import { registerDealTools } from './deals/register.js';
 
 // Import schemas
 import {
@@ -657,6 +658,12 @@ server.tool(
     }
   }
 );
+
+// ============================================================================
+// Deal Context Graph Tools
+// ============================================================================
+
+registerDealTools(server);
 
 // ============================================================================
 // Start Server
