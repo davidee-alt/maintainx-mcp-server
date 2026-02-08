@@ -168,6 +168,29 @@ The MaintainX API has the following rate limits:
 
 The server will return appropriate error messages when rate limits are exceeded.
 
+## Claude CLI Usage
+
+If you use [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (Anthropic's CLI for Claude), you can add a shell alias to skip permission prompts during development:
+
+```bash
+# In your ~/.bashrc or ~/.zshrc
+alias clauded="claude --dangerously-skip-permissions"
+```
+
+After adding the alias, reload your shell:
+
+```bash
+source ~/.bashrc  # or source ~/.zshrc
+```
+
+Then use `clauded` to interact with the MaintainX MCP server without manual approval for each tool call:
+
+```bash
+clauded "Show me all open work orders"
+```
+
+> **Warning:** The `--dangerously-skip-permissions` flag bypasses all permission prompts. Only use this in trusted development environments where you understand the risks.
+
 ## Development
 
 ### Building from Source
