@@ -50,6 +50,11 @@ import { ListTeamsSchema, GetTeamSchema } from './schemas/teams.js';
 import { ListVendorsSchema, GetVendorSchema, CreateVendorSchema } from './schemas/vendors.js';
 import { ListPurchaseOrdersSchema, GetPurchaseOrderSchema } from './schemas/purchase-orders.js';
 import { ListProcedureTemplatesSchema, GetProcedureTemplateSchema } from './schemas/procedures.js';
+import {
+  ExportToSecondBrainSchema,
+  ExportAllToSecondBrainSchema,
+  SecondBrainStatusSchema,
+} from './schemas/second-brain.js';
 
 // Import tool implementations
 import {
@@ -75,6 +80,11 @@ import { listTeams, getTeam } from './tools/teams.js';
 import { listVendors, getVendor, createVendor } from './tools/vendors.js';
 import { listPurchaseOrders, getPurchaseOrder } from './tools/purchase-orders.js';
 import { listProcedureTemplates, getProcedureTemplate } from './tools/procedures.js';
+import {
+  exportToSecondBrain,
+  exportAllToSecondBrain,
+  secondBrainStatus,
+} from './tools/second-brain.js';
 
 // Create MCP server
 const server = new McpServer({
@@ -651,6 +661,52 @@ server.tool(
   async (input) => {
     try {
       const result = await getProcedureTemplate(input);
+      return { content: [{ type: 'text', text: result }] };
+    } catch (error) {
+      return handleToolError(error);
+    }
+  }
+);
+
+// ============================================================================
+// Second Brain Tools
+// ============================================================================
+
+server.tool(
+  'export_to_second_brain',
+  'Export specific MaintainX data types to your second brain API for categorization. Choose which entity types to sync: work_orders, assets, locations, parts, work_requests, meters, users, teams, vendors, purchase_orders, procedures.',
+  ExportToSecondBrainSchema.shape,
+  async (input) => {
+    try {
+      const result = await exportToSecondBrain(input);
+      return { content: [{ type: 'text', text: result }] };
+    } catch (error) {
+      return handleToolError(error);
+    }
+  }
+);
+
+server.tool(
+  'export_all_to_second_brain',
+  'One-click full sync: export ALL MaintainX data (work orders, assets, locations, parts, requests, meters, users, teams, vendors, purchase orders, procedures) to your second brain API for automatic categorization.',
+  ExportAllToSecondBrainSchema.shape,
+  async (input) => {
+    try {
+      const result = await exportAllToSecondBrain(input);
+      return { content: [{ type: 'text', text: result }] };
+    } catch (error) {
+      return handleToolError(error);
+    }
+  }
+);
+
+server.tool(
+  'second_brain_status',
+  'Check the connection status of your second brain API integration.',
+  SecondBrainStatusSchema.shape,
+  async () => {
+    try {
+      const result = await secondBrainStatus();
       return { content: [{ type: 'text', text: result }] };
     } catch (error) {
       return handleToolError(error);
